@@ -34,6 +34,11 @@ $ brew update
 $ brew install ansible
 ```
 
+Finally, clone this repository:
+
+```
+$ git clone https://github.com/irifed/vagrant-cluster.git
+```
 
 ### Provision a cluster on a local machine
 
@@ -99,7 +104,7 @@ host3
 
 ## Known issues
 
-Sometimes instance provisioning time on SoftLayer is too long, and Vagrant throws timeout errors. In this case it is advised to switch datacenter and try again or simply retry in same datacenter. For any other problems please create an issue on GitHub.
+Sometimes instance provisioning time on SoftLayer is too long, and Vagrant throws timeout errors. In this case it is advised to switch datacenter and try again or simply retry in same datacenter. For any other problems please create an issue on this GitHub repository.
 
 ## Future work
 
