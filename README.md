@@ -73,6 +73,8 @@ Now, when small cluster was tested on a local machine, it's time to try pushing 
 $ vagrant plugin install vagrant-softlayer
 ```
 
+**Important note**: by default Vagrant will provision instances on SoftLayer sequentially, and this can take a long time. Fortunately, `vagrant-softlayer` plugin allows for parallel provisioning, though not officially at the time of writing this. See [this GitHub discussion](https://github.com/audiolize/vagrant-softlayer/issues/16) for details.
+
 ### Provision a cluster on a cloud
 
 Due to some limitations of Vagrant (or due to the fact that I could not figure this out yet), we have to explicitly tell Vagrant to use SoftLayer provider during provision step by passing PROVIDER environment variable:
@@ -100,6 +102,12 @@ master
 host2
 host1
 host3
+```
+
+Cluster instances will appear in `vagrantcluster.com` domain by default, but you can use `SL_DOMAIN` environment variable to use your custom domain:
+
+```
+export SL_DOMAIN="myawesomedomain.com"
 ```
 
 ## Known issues

@@ -38,7 +38,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         sl.api_key = ENV['SL_API_KEY']
         sl.ssh_key = ENV['SL_SSH_KEY']
 
-        sl.domain = "irina.com"
+        # use SL_DOMAIN environment variable to use your custom domain
+        sl.domain = (ENV['SL_DOMAIN'] || "vagrantcluster.com").to_s
 
         sl.datacenter = "dal05"
 
