@@ -75,7 +75,21 @@ $ vagrant plugin install vagrant-softlayer
 
 **Important note**: by default Vagrant will provision instances on SoftLayer sequentially, and this can take a long time. Fortunately, `vagrant-softlayer` plugin allows for parallel provisioning, though not officially at the time of writing this. See [this GitHub discussion](https://github.com/audiolize/vagrant-softlayer/issues/16) for details.
 
+Set up SoftLayer API credentials via environment variables:
+```
+export SL_SSH_KEY="<< your ssh key label >>"
+export SL_API_KEY="<< your SL API key >>"
+export SL_USERNAME="<< your SL API username >>"
+```
+
 ### Provision a cluster on a cloud
+
+Parameters of cluster nodes for SoftLayer should be adjusted in [Vagrantfile](https://github.com/irifed/vagrant-cluster/blob/master/Vagrantfile#L55-L56), default values are:
+
+```
+sl.start_cpus = 2
+sl.max_memory = 4096
+```
 
 Due to some limitations of Vagrant (or due to the fact that I could not figure this out yet), we have to explicitly tell Vagrant to use SoftLayer provider during provision step by passing PROVIDER environment variable:
 
@@ -109,6 +123,15 @@ Cluster instances will appear in `vagrantcluster.com` domain by default, but you
 ```
 export SL_DOMAIN="myawesomedomain.com"
 ```
+
+## Cluster teardown
+
+Cluster can be easily destroyed:
+```
+$ vagrant destroy -f
+```
+
+**Do not forget to destroy your cluster from cloud, as forgetting running cluster could cost you a lot of money!**
 
 ## Known issues
 
