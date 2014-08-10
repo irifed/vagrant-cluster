@@ -131,6 +131,23 @@ Cluster instances will appear in `vagrantcluster.com` domain by default, but you
 export SL_DOMAIN="myawesomedomain.com"
 ```
 
+## Using Spark
+
+Login to master as usual:
+```
+$ vagrant ssh master
+```
+
+Then become cluster user:
+```
+vagrant@master$ sudo su - hadoop
+```
+
+Start Spark:
+```
+hadoop@master$ /opt/spark/sbin/start-all.sh
+```
+
 ## Cluster teardown
 
 Cluster can be easily destroyed:
