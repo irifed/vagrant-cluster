@@ -10,6 +10,8 @@
 # $ vagrant up --no-provision
 # $ vagrant provision
 
+require 'yaml'
+
 ###############################################################################
 # number of workers in a cluster; total number of VMs will be num_workers + 1 (master)
 #
@@ -32,28 +34,29 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     # SoftLayer provider global settings
+    conf = YAML.load_file("sl_config.yml")
     config.vm.provider "softlayer" do |sl, override|
         
-        sl.username = ENV['SL_USERNAME']
-        sl.api_key = ENV['SL_API_KEY']
-        sl.ssh_key = ENV['SL_SSH_KEY']
+        # provide sl credentials either via yml config or via env vars
+        sl.username = conf["sl_username"] || ENV['SL_USERNAME']
+        sl.api_key = conf["sl_api_key"] || ENV['SL_API_KEY']
+        sl.ssh_key = conf["sl_ssh_key"] || ENV['SL_SSH_KEY']
 
-        # use SL_DOMAIN environment variable to use your custom domain
-        sl.domain = (ENV['SL_DOMAIN'] || "vagrantcluster.com").to_s
+        sl.domain = conf["sl_domain"] || ENV['SL_DOMAIN'] || "vagrantcluster.com"
 
-        sl.datacenter = "dal05"
+        sl.datacenter = conf["sl_datacenter"] || "dal05"
 
         override.ssh.username = "root"
 
         # path to private part of SL_SSH_KEY
-        override.ssh.private_key_path = ENV['HOME'] + "/.ssh/sftlyr"
+        override.ssh.private_key_path = conf["sl_private_key_path"]
 
         # path to box provided by vagrant-softlayer Vagrant plugin
         override.vm.box = "https://github.com/audiolize/vagrant-softlayer/raw/master/dummy.box" 
 
-        # parameters of cluster nodes
-        sl.start_cpus = 2
-        sl.max_memory = 4096
+        # parameters of cluster nodes; default are: cpus=2, memory=4096
+        sl.start_cpus = (conf["cpus"] || 1).to_i
+        sl.max_memory = (conf["memory"] || 1024).to_i
     end
 
     config.vm.provider "virtualbox" do |vb, override|

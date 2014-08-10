@@ -1,0 +1,19 @@
+# SoftLayer API credentials
+sl_username: "EDIT HERE"
+sl_api_key: "EDIT HERE"
+sl_ssh_key: "EDIT HERE"
+sl_private_key_path: "EDIT HERE"
+
+# custom domain
+sl_domain: "example.com"
+
+# datacenter where virtual servers should be provisioned
+# datacenter = [ams01,dal01,dal05,dal06,hkg02,lon02,sea01,sjc01,sng01,wdc01]
+sl_datacenter: "dal05"
+
+# virtual server parameters
+# cpus = [1,2,4,8,12,16]
+# memory = [1024,2048,4096,6144,8192,12288,16384,32768,49152,65536]
+cpus: 2
+memory: 2048
+

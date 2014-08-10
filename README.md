@@ -10,7 +10,14 @@ For the moment, this tool supports only [SoftLayer](http://www.softlayer.com/) a
 
 Ansible is an awesome orchestration tool which allows to provision any type software on a cluster (e.g. MPI, Hadoop, etc.)
 
-Currently, this tool contains Ansible playbook for provisioning trivial [OpenMPI](http://www.open-mpi.org/) cluster, but it will be extended to support Hadoop, Spark, etc.
+Ansible recipes are based on recipes from [AnsibleExamples](https://github.com/ansible/ansible-examples) repository.
+
+Currently, this tool contains Ansible playbooks for provisioning:
+
+- NFS share of /home across cluster nodes
+- [OpenMPI](http://www.open-mpi.org/)
+- HDFS based on CDH 5
+- standalone Spark
 
 ## Usage
 
