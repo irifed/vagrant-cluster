@@ -148,6 +148,11 @@ Start Spark:
 hadoop@master$ /opt/spark/sbin/start-all.sh
 ```
 
+## Running Spark on Mesos
+```
+root@master:~# /opt/spark/bin/spark-shell --master mesos://master:5050
+```
+
 ## Cluster teardown
 
 Cluster can be easily destroyed:
