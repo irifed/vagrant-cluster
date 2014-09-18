@@ -10,7 +10,7 @@ For the moment, this tool supports only [SoftLayer](http://www.softlayer.com/) a
 
 Ansible is an awesome orchestration tool which allows to provision any type software on a cluster (e.g. MPI, Hadoop, etc.)
 
-Ansible recipes are based on recipes from [AnsibleExamples](https://github.com/ansible/ansible-examples) repository.
+Ansible recipes are based on recipes from [AnsibleExamples](https://github.com/ansible/ansible-examples) and [Ansible Galaxy](https://github.com/AnsibleShipyard/ansible-galaxy-roles) repositories.
 
 Currently, this tool contains Ansible playbooks for provisioning:
 
@@ -18,6 +18,8 @@ Currently, this tool contains Ansible playbooks for provisioning:
 - [OpenMPI](http://www.open-mpi.org/)
 - HDFS based on CDH 5
 - standalone Spark
+- standalone Shark (and Hive)
+- Scala, SBT (TODO include as submodules from Galaxy)
 
 ## Usage
 
@@ -27,10 +29,10 @@ Obviously, it is required to install Vagrant and Ansible on your local machine f
 
 In short, for example in Mac OS X steps are the following:
 
-- download Vagrant binary package
+- download Vagrant binary package from [www.vagrantup.com](http://www.vagrantup.com/downloads.html)
 
 ```
-$ wget https://dl.bintray.com/mitchellh/vagrant/vagrant_1.6.3.dmg
+$ wget https://dl.bintray.com/mitchellh/vagrant/vagrant_1.6.5.dmg
 ```
 
 - install Vagrant from .dmg file as usual
@@ -91,12 +93,15 @@ export SL_USERNAME="<< your SL API username >>"
 
 ### Provision a cluster on a cloud
 
-Parameters of cluster nodes for SoftLayer should be adjusted in [Vagrantfile](https://github.com/irifed/vagrant-cluster/blob/master/Vagrantfile#L55-L56), default values are:
+Parameters of cluster nodes for SoftLayer should be adjusted in [sl_config.yml](https://github.com/irifed/vagrant-cluster/blob/master/sl_config.yml.template). For running [AMPCamp Big Data Mini Course](http://ampcamp.berkeley.edu/big-data-mini-course/)  example recommended values for `sl_config.yml` are:
 
 ```
-sl.start_cpus = 2
-sl.max_memory = 4096
+cpus: 4
+memory: 16384
+disk_capacity: 100
+network_speed: 1000
 ```
+Also, for Big Data Mini Course use at least 5 worker nodes: `NUM_WORKERS=5`.
 
 Due to some limitations of Vagrant (or due to the fact that I could not figure this out yet), we have to explicitly tell Vagrant to use SoftLayer provider during provision step by passing PROVIDER environment variable:
 
@@ -153,6 +158,25 @@ hadoop@master$ /opt/spark/sbin/start-all.sh
 root@master:~# /opt/spark/bin/spark-shell --master mesos://master:5050
 ```
 
+## Running AMPCamp Big Data Mini Course Examples
+
+If you would like to run AMPCamp Big Data Mini Course examples, make sure that main playbook `site.yml` includes `ampcamp_master` role:
+```
+- name: prepare for AMPCamp Big Data Mini Course
+  hosts: master
+  roles:
+    - ampcamp_master
+```
+This role will download necessary dataset from SoftLayer Object Store, so be sure to set up your Object Store credentials at `playbooks/roles/ampcamp_master/vars/main.yml`:
+```
+ampcamp:
+    swift_api_url: "https://sjc01.objectstorage.softlayer.net/auth/v1.0/"
+    swift_user: "YOUR SWIFT USERNAME"
+    swift_key: "YOU SWIFT API KEY"
+    ampcamp_container: "ampcamp-data"
+    ampcamp_data_folder: "wikistats_20090505-01"
+```
+
 ## Cluster teardown
 
 Cluster can be easily destroyed:
@@ -175,3 +199,7 @@ Sometimes instance provisioning time on SoftLayer is too long, and Vagrant throw
 
 ## Credits
 Irina Fedulova (@irifed)
+
+https://github.com/AnsibleShipyard
+
+https://github.com/ansible/ansible-examples
