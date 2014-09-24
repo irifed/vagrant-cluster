@@ -52,7 +52,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         override.ssh.private_key_path = conf["sl_private_key_path"]
 
         # path to box provided by vagrant-softlayer Vagrant plugin
-        override.vm.box = "https://github.com/audiolize/vagrant-softlayer/raw/master/dummy.box" 
+        # NOTE: make sure to run this command before vagrant up
+        # vagrant box add softlayer.box \
+        #   https://github.com/audiolize/vagrant-softlayer/raw/master/dummy.box \
+        #   --provider softlayer
+        override.vm.box = "softlayer.box"
 
         # parameters of cluster nodes; default are: cpus=2, memory=4096
         sl.start_cpus = (conf["cpus"] || 1).to_i
