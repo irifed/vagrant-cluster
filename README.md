@@ -158,25 +158,6 @@ hadoop@master$ /opt/spark/sbin/start-all.sh
 root@master:~# /opt/spark/bin/spark-shell --master mesos://master:5050
 ```
 
-## Running AMPCamp Big Data Mini Course Examples
-
-If you would like to run AMPCamp Big Data Mini Course examples, make sure that main playbook `site.yml` includes `ampcamp_master` role:
-```
-- name: prepare for AMPCamp Big Data Mini Course
-  hosts: master
-  roles:
-    - ampcamp_master
-```
-This role will download necessary dataset from SoftLayer Object Store, so be sure to set up your Object Store credentials at `playbooks/roles/ampcamp_master/vars/main.yml`:
-```
-ampcamp:
-    swift_api_url: "https://sjc01.objectstorage.softlayer.net/auth/v1.0/"
-    swift_user: "YOUR SWIFT USERNAME"
-    swift_key: "YOU SWIFT API KEY"
-    ampcamp_container: "ampcamp-data"
-    ampcamp_data_folder: "wikistats_20090505-01"
-```
-
 ## Cluster teardown
 
 Cluster can be easily destroyed:
@@ -189,12 +170,6 @@ $ vagrant destroy -f
 ## Known issues
 
 Sometimes instance provisioning time on SoftLayer is too long, and Vagrant throws timeout errors. In this case it is advised to switch datacenter and try again or simply retry in same datacenter. For any other problems please create an issue on this GitHub repository.
-
-## Future work
-
-- add support for other clustering software (Hadoop, BDAS, etc.)
-- add support for other cloud providers (Amazon EC2, Google Compute Engine, etc.)
-- improve MPI cluster by adding SLURM
 
 
 ## Credits
