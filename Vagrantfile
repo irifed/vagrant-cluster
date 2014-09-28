@@ -17,14 +17,14 @@ require 'yaml'
 #
 # you can specify NUM_WORKERS via cmdline, e.g. 
 # $ NUM_WORKERS=1 vagrant up --provider=softlayer --no-provision
-num_workers = (ENV['NUM_WORKERS'] || 3).to_i 
+num_workers = (ENV['NUM_WORKERS'] || 5).to_i 
 
 # TODO so far could not find way to determine provider during provisioning step,
 # so have to explicitly pass provider via env variable
 #
 # $ PROVIDER=softlayer vagrant provision
 
-provider = (ENV['PROVIDER'] || "virtualbox")
+provider = (ENV['PROVIDER'] || "softlayer")
 
 ###############################################################################
 
@@ -32,6 +32,10 @@ provider = (ENV['PROVIDER'] || "virtualbox")
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+    # Uncomment this line if getting NFS error
+    # when using from inside other Vagrant VM
+    # config.nfs.functional = false
 
     # SoftLayer provider global settings
     conf = YAML.load_file("sl_config.yml")
