@@ -99,7 +99,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
                 "master" => ["master"],
                 "workers" => workers
             }
-            ansible.playbook = "playbooks/site.yml"
+            ansible.playbook = "ansible-bdas/site.yml"
             ansible.limit = "all"
 
             ansible.verbose = "vvvv"
