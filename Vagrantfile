@@ -62,6 +62,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         #   --provider softlayer
         override.vm.box = "softlayer.box"
 
+        override.vm.boot_timeout = 600
+        sl.api_timeout = 600
+
         # parameters of cluster nodes; default are: cpus=2, memory=4096
         sl.start_cpus = (conf["cpus"] || 1).to_i
         sl.max_memory = (conf["memory"] || 1024).to_i
