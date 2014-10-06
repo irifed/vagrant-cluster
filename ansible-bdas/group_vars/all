@@ -51,7 +51,7 @@ hadoop:
 spark:
     spark_version: "0.9.2-bin-hadoop2"
     spark_download_url: "http://d3kbcqa49mib13.cloudfront.net/spark-0.9.2-bin-hadoop2.tgz"
-    spark_root: "/opt/spark/"
+    spark_root: "/opt/spark"
     spark_master_host: "{{ master_hostname }}"
     spark_master_port: 7077
 # memory per executor, increase if see java out-of-memory exceptions in spark shell
@@ -60,6 +60,17 @@ spark:
 # make sure to leave at least 1gb for the system on slaves
     spark_worker_memory: 14g
     spark_mem: 14g
+
+tachyon:
+    # tachyon_version: "0.5.0"
+    # pre-built tachyon does not work with CDH5
+    # tachyon_download_url: "http://tachyon-project.org/downloads/tachyon-0.5.0-bin.tar.gz"
+    # download custom built tachyon from SL swift
+    tachyon_version: "0.5.0-hadoop2.3"
+    tachyon_download_url: "tachyon-0.5.0-hadoop2.3.tgz"
+    tachyon_root: "/opt/tachyon"
+    tachyon_master_host: "{{ master_hostname }}"
+    tachyon_underfs_address: "hdfs://{{ hadoop['hdfs_namenode_host'] }}:{{ hadoop['hdfs_defaultFS_port'] }}"
 
 hive:
     hive_user: hive
