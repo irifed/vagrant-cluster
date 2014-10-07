@@ -55,21 +55,22 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         # path to private part of SL_SSH_KEY
         override.ssh.private_key_path = conf["sl_private_key_path"]
 
-        # path to box provided by vagrant-softlayer Vagrant plugin
-        # NOTE: make sure to run this command before vagrant up
-        # vagrant box add softlayer.box \
-        #   https://github.com/audiolize/vagrant-softlayer/raw/master/dummy.box \
-        #   --provider softlayer
-        override.vm.box = "softlayer.box"
+        override.vm.box = "ju2wheels/SL_GENERIC"
 
-        override.vm.boot_timeout = 600
-        sl.api_timeout = 600
+        override.vm.boot_timeout = 3600
+        sl.api_timeout = 3600
+        sl.provision_timeout = 3600
 
         # parameters of cluster nodes; default are: cpus=2, memory=4096
         sl.start_cpus = (conf["cpus"] || 1).to_i
         sl.max_memory = (conf["memory"] || 1024).to_i
-        sl.disk_capacity =  { 0 => (conf["disk_capacity"] || 25).to_i }
         sl.network_speed = (conf["network_speed"] || 10).to_i
+
+        sl.disk_capacity =  { 0 => (conf["disk_capacity"] || 25).to_i }
+
+        # To use images need to set image_guid AND unset operating_system AND unset disk_capacity
+        # sl.image_guid = "ffb910d9-31ca-40b7-9d8d-b4c16ff1f235"
+        # sl.operating_system = nil
     end
 
     config.vm.provider "virtualbox" do |vb, override|
