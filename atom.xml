@@ -4,7 +4,7 @@
   <title><![CDATA[Data Analytics Clusters on SoftLayer]]></title>
   <link href="http://irifed.github.io/vagrant-cluster/atom.xml" rel="self"/>
   <link href="http://irifed.github.io/vagrant-cluster/"/>
-  <updated>2014-10-27T15:58:37+03:00</updated>
+  <updated>2014-10-27T16:19:40+03:00</updated>
   <id>http://irifed.github.io/vagrant-cluster/</id>
   <author>
     <name><![CDATA[Irina Fedulova]]></name>
@@ -20,7 +20,7 @@
     <id>http://irifed.github.io/vagrant-cluster/blog/2014/10/27/running-spark-training-examples</id>
     <content type="html"><![CDATA[<p>After you have created a data analytics cluster using Vagrant-Cluster tool you probably want to see some usage examples. Note that cluster provisioning and setup using <code>vagrant-cluster</code> tool is described in the <a href="TODO">previous post</a>.</p>
 
-<p>Here we present how to run hands-on excercises from <a href="https://databricks-training.s3.amazonaws.com/index.html">Spark Training</a> tutorial prepared by <a href="http://databricks.com/">Databricks</a>.</p>
+<p>Here we show how to run hands-on excercises from <a href="https://databricks-training.s3.amazonaws.com/index.html">Spark Training</a> tutorial prepared by <a href="http://databricks.com/">Databricks</a>.</p>
 
 <p>Assuming that you used <code>vagrant-cluster</code> for cluster provisioning, you are on your local machine in the directory with <code>Vagrantfile</code> of your cluster. Start with logging in to master server:</p>
 
@@ -56,7 +56,7 @@
 </span><span class='line'>root@master:~#</span></code></pre></td></tr></table></div></figure>
 
 
-<p>First, get some input data and application templates:</p>
+<p>We should start with downloading Spark application templates and input data for the Databricks tutorial:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -66,7 +66,7 @@
 
 <h2>Running Sample Application</h2>
 
-<p>We start with verifying that our Spark cluster is working by running a sample application:</p>
+<p>Our first task will be to verify that our Spark cluster is working by running a sample application:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>root@master:~# cd spark-training/simple-app</span></code></pre></td></tr></table></div></figure>
@@ -133,8 +133,6 @@
 
 
 <p>All other contents of Spark Streaming example can be run without modifications on our cluster.</p>
-
-<h2>Movie Recomendation with MLlib</h2>
 ]]></content>
   </entry>
   
