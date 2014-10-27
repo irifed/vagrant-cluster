@@ -88,6 +88,10 @@
 
 <p>Here we show how to run hands-on excercises from <a href="https://databricks-training.s3.amazonaws.com/index.html">Spark Training</a> tutorial prepared by <a href="http://databricks.com/">Databricks</a>.</p>
 
+<p>Tutorial examples are prepared for running on a local Spark deployment. To run these examples on our cluster on SoftLayer we will have to make some minor modifications, e.g. use different parameters for <code>spark-submit</code>. In this post we cover only differences between what was suggested in original Databricks tutorial and what should be done to run examples on the cluster. For detailed example description we strongly encourage you to refer to the original <a href="https://databricks-training.s3.amazonaws.com/index.html">Spark Training</a> tutorial.</p>
+
+<h2>Logging in to the cluster</h2>
+
 <p>Assuming that you used <code>vagrant-cluster</code> for cluster provisioning, you are on your local machine in the directory with <code>Vagrantfile</code> of your cluster. Start with logging in to master server:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -122,6 +126,8 @@
 </span><span class='line'>root@master:~#</span></code></pre></td></tr></table></div></figure>
 
 
+<h2>Running Sample Application</h2>
+
 <p>We should start with downloading Spark application templates and input data for the Databricks tutorial:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -129,8 +135,6 @@
 </pre></td><td class='code'><pre><code class=''><span class='line'>root@master:~# wget https://s3-us-west-2.amazonaws.com/databricks-meng/usb.zip
 </span><span class='line'>root@master:~# unzip usb.zip</span></code></pre></td></tr></table></div></figure>
 
-
-<h2>Running Sample Application</h2>
 
 <p>Our first task will be to verify that our Spark cluster is working by running a sample application:</p>
 
