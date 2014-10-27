@@ -4,7 +4,7 @@
   <title><![CDATA[Data Analytics Clusters on SoftLayer]]></title>
   <link href="http://irifed.github.io/vagrant-cluster/atom.xml" rel="self"/>
   <link href="http://irifed.github.io/vagrant-cluster/"/>
-  <updated>2014-10-27T14:57:04+03:00</updated>
+  <updated>2014-10-27T15:58:37+03:00</updated>
   <id>http://irifed.github.io/vagrant-cluster/</id>
   <author>
     <name><![CDATA[Irina Fedulova]]></name>
@@ -14,65 +14,111 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Running Spark Training Examples]]></title>
+    <title type="html"><![CDATA[Running Examples From Databricks Spark Tutorial]]></title>
     <link href="http://irifed.github.io/vagrant-cluster/blog/2014/10/27/running-spark-training-examples/"/>
     <updated>2014-10-27T12:55:04+03:00</updated>
     <id>http://irifed.github.io/vagrant-cluster/blog/2014/10/27/running-spark-training-examples</id>
-    <content type="html"><![CDATA[<p>After you have created a data analytics cluster using Vagrant-Cluster tool you certainly will want to see how to use it. Here we present how to run hands-on excercises from <a href="https://databricks-training.s3.amazonaws.com/index.html">Spark Training</a> tutorial prepared by <a href="http://databricks.com/">Databricks</a>.</p>
+    <content type="html"><![CDATA[<p>After you have created a data analytics cluster using Vagrant-Cluster tool you probably want to see some usage examples. Note that cluster provisioning and setup using <code>vagrant-cluster</code> tool is described in the <a href="TODO">previous post</a>.</p>
 
-<p>First, get some input data and application templates:</p>
+<p>Here we present how to run hands-on excercises from <a href="https://databricks-training.s3.amazonaws.com/index.html">Spark Training</a> tutorial prepared by <a href="http://databricks.com/">Databricks</a>.</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>wget https://s3-us-west-2.amazonaws.com/databricks-meng/usb.zip
-</span><span class='line'>unzip usb.zip
-</span><span class='line'>cd spark-training/simple-app</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Running Sample Application</h2>
-
-<p>In Databrick tutorial examples in <code>spark-training</code> folder are set up to run from local Spark deployment (no cluster) and takes input files from local filesystem by default. But we have a real Spark cluster with HDFS, so we should put our input data to HDFS to be accessible by the cluster, for example to run SampleApp first put some file to HDFS:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>hadoop fs -put ../spark/README.md /</span></code></pre></td></tr></table></div></figure>
-
-
-<p>and make corresponding changes to <code>src/main/SimpleApp.scala</code> by adding <code>hdfs:///</code> prefix to input file location:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>val logFile = "hdfs:///README.md"</span></code></pre></td></tr></table></div></figure>
-
-
-<p>After this you can just compile and run SimpleApp to verify that Spark cluster is working:</p>
+<p>Assuming that you used <code>vagrant-cluster</code> for cluster provisioning, you are on your local machine in the directory with <code>Vagrantfile</code> of your cluster. Start with logging in to master server:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ sbt package
-</span><span class='line'>$ /opt/spark/bin/spark-submit --class "SimpleApp" \ 
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>user@laptop vagrant-cluster$ ls
+</span><span class='line'>LICENSE
+</span><span class='line'>README.md
+</span><span class='line'>Vagrantfile
+</span><span class='line'>ansible-bdas
+</span><span class='line'>ansible.cfg
+</span><span class='line'>sl_config.yml
+</span><span class='line'>sl_config.yml.template
+</span><span class='line'>
+</span><span class='line'>user@laptop vagrant-cluster$ vagrant ssh master
+</span><span class='line'>
+</span><span class='line'>Welcome to Ubuntu 14.04.1 LTS (GNU/Linux 3.13.0-36-generic x86_64)
+</span><span class='line'>
+</span><span class='line'> * Documentation:  https://help.ubuntu.com/
+</span><span class='line'>root@master:~#</span></code></pre></td></tr></table></div></figure>
+
+
+<p>First, get some input data and application templates:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@master:~# wget https://s3-us-west-2.amazonaws.com/databricks-meng/usb.zip
+</span><span class='line'>root@master:~# unzip usb.zip</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Running Sample Application</h2>
+
+<p>We start with verifying that our Spark cluster is working by running a sample application:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@master:~# cd spark-training/simple-app</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In the Databricks tutorial all examples in <code>spark-training</code> folder are set up to run from local Spark deployment (no cluster) and take input files from local filesystem by default. But here we have a real Spark cluster with HDFS, so we should put our input data to HDFS to be accessible by workers.</p>
+
+<p>For example to run SampleApp we should put some file, e.g. <code>README.md</code> file to HDFS:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@master:~# hadoop fs -put ../spark/README.md /</span></code></pre></td></tr></table></div></figure>
+
+
+<p>and make corresponding changes to <code>src/main/SimpleApp.scala</code> by adding <code>hdfs:///</code> prefix to input file location, so that <code>SimpleApp.scala</code> file looks like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>...
+</span><span class='line'>val logFile = "hdfs:///README.md"
+</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Compile and run SimpleApp:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@master:~# sbt package
+</span><span class='line'>root@master:~# /opt/spark/bin/spark-submit --class "SimpleApp" \ 
 </span><span class='line'>    --master spark://master:7077 target/scala-2.10/simple-project_2.10-1.0.jar
 </span><span class='line'>...
 </span><span class='line'>Lines with a: 83, Lines with b: 38</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Note that we are running <code>sbt</code> without any prefix paths because SBT is installed system-wide on your cluster. Also we submit SimpleApp to the real Spark cluster instead of local using <code>--master spark://master:7077</code> option.</p>
+<p>Note that we are running <code>sbt</code> without any prefix paths because SBT is installed system-wide on your cluster. Also we submit SimpleApp to the real Spark cluster instead of local mode using <code>--master spark://master:7077</code> option.</p>
 
-<h2>Spark SQL examples</h2>
+<h2>Data exploration using Spark SQL</h2>
 
-<p>Next, move to the next page and try running some Spark SQL examples as described in corresponding part of Databricks <a href="https://databricks-training.s3.amazonaws.com/data-exploration-using-spark-sql.html">tutorial</a>. We will again need to do some tweaks to run examples from Databrick tutorial on our cluster. Spark SQL section of tutorial uses input data stored in <code>spark-training/data</code> folder, so we will put it to HDFS</p>
+<p>Next, move to the next page of the Databricks tutorial and try running some <a href="https://databricks-training.s3.amazonaws.com/data-exploration-using-spark-sql.html">Spark SQL examples</a>. We will again need to do some tweaks to run examples from Databrick tutorial on our cluster. Spark SQL section of tutorial uses input data stored in <code>spark-training/data</code> folder on local disk, so we will put it to HDFS</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ cd /root/spark-training
-</span><span class='line'>$ hadoop fs -put data /root/data</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@master:~# cd /root/spark-training
+</span><span class='line'>root@master:~# hadoop fs -put data /root/data</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Now you can run all examples from above mentioned <a href="https://databricks-training.s3.amazonaws.com/data-exploration-using-spark-sql.html">Spark SQL</a>section of Databricks Spark Training tutorial.</p>
+<p>Now you can run all examples from above mentioned <a href="https://databricks-training.s3.amazonaws.com/data-exploration-using-spark-sql.html">Spark SQL</a>section of Databricks Spark Training tutorial without modifications.</p>
 
-<h2>Spark Streaming</h2>
+<h2>Stream processing with Spark Streaming</h2>
 
 <p>To run examples from <a href="https://databricks-training.s3.amazonaws.com/realtime-processing-with-spark-streaming.html">Spark Streaming</a> section of the tutorial we again need to do only few modifications. To compile and submit your Spark Streaming application use following commands instead of those suggested in the tutorial:</p>
 
@@ -80,11 +126,15 @@
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ sbt assembly
-</span><span class='line'>$ /opt/spark/bin/spark-submit --master spark://master:7077 \ 
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@master:~# sbt assembly
+</span><span class='line'>root@master:~# /opt/spark/bin/spark-submit --master spark://master:7077 \ 
 </span><span class='line'>--class "Tutorial" \
 </span><span class='line'>--master spark://master:7077 target/scala-2.10/Tutorial-assembly-0.1-SNAPSHOT.jar</span></code></pre></td></tr></table></div></figure>
 
+
+<p>All other contents of Spark Streaming example can be run without modifications on our cluster.</p>
+
+<h2>Movie Recomendation with MLlib</h2>
 ]]></content>
   </entry>
   
