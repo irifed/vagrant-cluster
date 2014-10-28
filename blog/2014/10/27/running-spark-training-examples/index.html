@@ -9,7 +9,7 @@
   <meta name="author" content="Irina Fedulova">
 
   
-  <meta name="description" content="After you have created a data analytics cluster using Vagrant-Cluster tool you probably want to see some usage examples. Note that cluster &hellip;">
+  <meta name="description" content="In this post we show how to run hands-on excercises from Spark Training tutorial prepared by Databricks. Note that cluster provisioning and setup &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -84,11 +84,9 @@
   </header>
 
 
-<div class="entry-content"><p>After you have created a data analytics cluster using Vagrant-Cluster tool you probably want to see some usage examples. Note that cluster provisioning and setup using <code>vagrant-cluster</code> tool is described in the <a href="TODO">previous post</a>.</p>
+<div class="entry-content"><p>In this post we show how to run hands-on excercises from <a href="https://databricks-training.s3.amazonaws.com/index.html">Spark Training</a> tutorial prepared by <a href="http://databricks.com/">Databricks</a>. Note that cluster provisioning and setup using <code>vagrant-cluster</code> tool is described in the <a href="TODO">previous post</a>.</p>
 
-<p>Here we show how to run hands-on excercises from <a href="https://databricks-training.s3.amazonaws.com/index.html">Spark Training</a> tutorial prepared by <a href="http://databricks.com/">Databricks</a>.</p>
-
-<p>Tutorial examples are prepared for running on a local Spark deployment. To run these examples on our cluster on SoftLayer we will have to make some minor modifications, e.g. use different parameters for <code>spark-submit</code>. In this post we cover only differences between what was suggested in original Databricks tutorial and what should be done to run examples on the cluster. For detailed example description we strongly encourage you to refer to the original <a href="https://databricks-training.s3.amazonaws.com/index.html">Spark Training</a> tutorial.</p>
+<p>Originally Spark Training examples are prepared for running on a local Spark deployment. To run these examples on our cluster on SoftLayer we will have to make some minor modifications, e.g. use different parameters for <code>spark-submit</code>. Here we cover only differences between what was suggested in original Databricks tutorial and what should be done to run examples on the cluster. For detailed example description we strongly encourage you to refer to the original <a href="https://databricks-training.s3.amazonaws.com/index.html">Spark Training</a> tutorial.</p>
 
 <h2>Logging in to the cluster</h2>
 
@@ -128,7 +126,7 @@
 
 <h2>Running Sample Application</h2>
 
-<p>We should start with downloading Spark application templates and input data for the Databricks tutorial:</p>
+<p>Download Spark application templates and input data for the Databricks tutorial:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -178,7 +176,7 @@
 
 <h2>Data exploration using Spark SQL</h2>
 
-<p>Next, move to the next page of the Databricks tutorial and try running some <a href="https://databricks-training.s3.amazonaws.com/data-exploration-using-spark-sql.html">Spark SQL examples</a>. We will again need to do some tweaks to run examples from Databrick tutorial on our cluster. Spark SQL section of tutorial uses input data stored in <code>spark-training/data</code> folder on local disk, so we will put it to HDFS</p>
+<p>Next, move to the next page of the Databricks tutorial and try running some <a href="https://databricks-training.s3.amazonaws.com/data-exploration-using-spark-sql.html">Spark SQL examples</a>. We will again need to do some tweaks to run examples from Databrick tutorial on our cluster. Namely, Spark SQL section of this tutorial uses input data stored in <code>spark-training/data</code> folder on local disk, but we are going to run on a real cluster, so we should put data to HDFS:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -186,7 +184,7 @@
 </span><span class='line'>root@master:~# hadoop fs -put data /root/data</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Now you can run all examples from above mentioned <a href="https://databricks-training.s3.amazonaws.com/data-exploration-using-spark-sql.html">Spark SQL</a>section of Databricks Spark Training tutorial without modifications.</p>
+<p>Now you can run all examples from above mentioned <a href="https://databricks-training.s3.amazonaws.com/data-exploration-using-spark-sql.html">Spark SQL</a> section of Databricks Spark Training tutorial without modifications.</p>
 
 <h2>Stream processing with Spark Streaming</h2>
 
@@ -203,6 +201,122 @@
 
 
 <p>All other contents of Spark Streaming example can be run without modifications on our cluster.</p>
+
+<h2>Movie Recommendation with MLlib</h2>
+
+<p>This section explains how to use MLlib to make personalized movie recommendations. Please read <a href="https://databricks-training.s3.amazonaws.com/movie-recommendation-with-mllib.html">detailed description</a> of this example in the original Spark Training tutorial.</p>
+
+<p>To run MLlib example on our cluster on SoftLayer we again have to make some modifications.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@master:~# cd /root/spark-training/machine-learning</span></code></pre></td></tr></table></div></figure>
+
+
+<p>To make personalized movie recommendations, you should first provide your personal ratings for a few movies as described <a href="https://databricks-training.s3.amazonaws.com/movie-recommendation-with-mllib.html#create-training-examples">here</a>:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@master:~/spark-training/machine-learning# python bin/rateMovies</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This script will ask you to provide numerical rating to a set of movies and write result to a file <code>personalRatings.txt</code>.</p>
+
+<p>Move on to the directory where Scala source code for this Movie rating algorithm is stored:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@master:~/spark-training/machine-learning# cd scala</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Our cluster is running Spark 1.1.0 on top of CDH 5, so original <code>build.sbt</code> file should be modified and look like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>import AssemblyKeys._
+</span><span class='line'>
+</span><span class='line'>assemblySettings
+</span><span class='line'>
+</span><span class='line'>name := "movielens-als"
+</span><span class='line'>
+</span><span class='line'>version := "0.1"
+</span><span class='line'>
+</span><span class='line'>scalaVersion := "2.10.4"
+</span><span class='line'>
+</span><span class='line'>libraryDependencies += "org.apache.spark" %% "spark-core" % "1.1.0" % "provided"
+</span><span class='line'>
+</span><span class='line'>libraryDependencies += "org.apache.spark" %% "spark-mllib" % "1.1.0" % "provided"
+</span><span class='line'>
+</span><span class='line'>libraryDependencies += "org.apache.hadoop" % "hadoop-client" % "2.3.0" % "provided"
+</span><span class='line'>
+</span><span class='line'>libraryDependencies += "org.apache.hadoop" % "hadoop-hdfs" % "2.3.0" % "provided"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can download this file to your cluster using following command:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>wget htts://TODO-TODO/build.sbt</span></code></pre></td></tr></table></div></figure>
+
+
+<p>After updating <code>build.sbt</code> program can be compiled with SBT assembly command:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@master:~/spark-training/machine-learning/scala# sbt assembly</span></code></pre></td></tr></table></div></figure>
+
+
+<p>To run assembled Spark application use following parameters for <code>spark-submit</code> script:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@master:~/spark-training/machine-learning/scala# /opt/spark/bin/spark-submit \
+</span><span class='line'>--master spark://master:7077 \
+</span><span class='line'>--class "MovieLensALS" \
+</span><span class='line'>target/scala-2.10/movielens-als-assembly-0.1.jar \
+</span><span class='line'>hdfs://master:8020/movielens/large ../personalRatings.txt</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Note that in this command we provide Spark master address <code>spark://master:7077</code>, &ldquo;MovieLensALS&rdquo; class name and assembly jar and two command line parameters for MovieLensALS class: path to <code>movielens/large</code> dataset and path to <code>personalRatings.txt</code> file.</p>
+
+<p>Because you are now running your program on the real Spark cluster, input dataset should be either stored on local file system accessible by all nodes at the same path, or on HDFS. Cluster provisioning script already has preloaded <code>movielens/medium</code> and <code>movielens/large</code> datasets on HDFS of your cluster, so you should provide dataset path as <code>hdfs://master:8020/movielens/medium/</code> or <code>hdfs://master:8020/movielens/large/</code>. Note trailing <code>/</code> at the end of HDFS urls, this is very important for correct constructing of path in <code>MovieLensALS.scala</code>.</p>
+
+<p>Finally, <code>MovieLensALS.scala</code> program is desisgned to read input file from local filesystem, so you should modify a couple of lines in <code>MovieLensALS.scala</code> to read files from HDFS.
+Replace line</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>val ratings = sc.textFile(new File(movieLensHomeDir, "ratings.dat").toString).map { line =&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>
+by</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>val ratings = sc.textFile(movieLensHomeDir + "ratings.dat").map { line =&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>and do the same with <code>val movies = ...</code> line so it looks like</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>val movies = sc.textFile(movieLensHomeDir + "movies.dat").map { line =&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Here we simply replaced <code>new File(movieLensHomeDir, "ratings.dat").toString</code> construct by <code>movieLensHomeDir + "ratings.dat"</code>, because <code>new File(...)</code> creates a local File instance from a parent and child path strings, but we do not need this because we provided full HDFS link as a parameter to <code>spark-submit</code>.</p>
+
+<p>Remaining contents of <a href="https://databricks-training.s3.amazonaws.com/movie-recommendation-with-mllib.html">MLlib example</a> does not require any modifications for running on a real cluster.</p>
 </div>
 
 
