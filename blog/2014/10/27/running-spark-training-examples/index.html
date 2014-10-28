@@ -123,9 +123,9 @@
   </header>
 
 
-<div class="entry-content clearfix" itemprop="articleBody description"><p>In this post we show how to run hands-on excercises from <a href="https://databricks-training.s3.amazonaws.com/index.html">Spark Training</a> tutorial prepared by <a href="http://databricks.com/">Databricks</a> on the data analytics cluster provisioned by Vagrant-Cluster tool. Note that cluster provisioning and setup using <code>vagrant-cluster</code> tool is described <a href="https://github.com/irifed/vagrant-cluster">here</a>.</p>
+<div class="entry-content clearfix" itemprop="articleBody description"><p>In this post we show how to run hands-on excercises from <a href="https://databricks-training.s3.amazonaws.com/index.html">Spark Training</a> tutorial prepared by <a href="http://databricks.com/">Databricks</a> on the data analytics cluster provisioned by Vagrant-Cluster tool. Note that cluster provisioning and setup using this tool is described in detail <a href="https://github.com/irifed/vagrant-cluster">here</a>.</p>
 
-<p>Originally Spark Training examples are prepared for running on a local Spark deployment. To run these examples on our cluster on SoftLayer we will have to make some minor modifications, e.g. use different parameters for <code>spark-submit</code>. Here we cover only differences between what was suggested in original Databricks tutorial and what should be done to run examples on the cluster. For detailed example description we strongly encourage you to refer to the original <a href="https://databricks-training.s3.amazonaws.com/index.html">Spark Training</a> tutorial.</p>
+<p>Originally Spark Training examples are prepared for running on a local Spark deployment. To run these examples on our cluster on SoftLayer we will have to make some minor modifications, e.g. use different parameters for <code>spark-submit</code>. Here we cover only differences between what was suggested in original Databricks tutorial and what should be done to run examples on the cluster. For detailed description of examples we strongly encourage you to refer to the original <a href="https://databricks-training.s3.amazonaws.com/index.html">Spark Training</a> tutorial.</p>
 
 <h2>Logging in to the cluster</h2>
 
@@ -204,7 +204,7 @@
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@master:~# sbt package
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@master:~# sbt assembly
 </span><span class='line'>root@master:~# /opt/spark/bin/spark-submit --class "SimpleApp" \ 
 </span><span class='line'>    --master spark://master:7077 target/scala-2.10/simple-project_2.10-1.0.jar
 </span><span class='line'>...
