@@ -1,18 +1,34 @@
 ---
 - name: Download Shark pre-built package
-  get_url: url={{ shark['shark_download_url'] }} dest="/tmp/shark-{{ shark['shark_version'] }}.tgz"
+  get_url: url={{ shark_download_url }} dest="/tmp/shark-{{ shark_version }}.tgz"
   tags:
     - install
 
 - name: Extract Shark archive
-  unarchive: copy=no src="/tmp/shark-{{ shark['shark_version'] }}.tgz" dest=/opt/
+  unarchive: copy=no src="/tmp/shark-{{ shark_version }}.tgz" dest=/opt/
   tags:
     - install
 
 - name: Create link to Shark directory
-  file: src=/opt/shark-{{ shark['shark_version'] }} dest=/opt/shark state=link
+  file: src=/opt/shark-{{ shark_version }} dest=/opt/shark state=link
   tags:
     - install
+
+- include_vars: roles/hadoop_common/vars/main.yml
+  tags:
+    - configure
+
+- include_vars: roles/spark_standalone/vars/main.yml
+  tags:
+    - configure
+
+- include_vars: roles/mesos/vars/main.yml
+  tags:
+    - configure
+
+- include_vars: roles/hive/vars/main.yml
+  tags:
+    - configure
 
 - name: Configure Shark to run in standalone deploy mode
   template: src=conf/shark-env.sh.j2 dest=/opt/shark/conf/shark-env.sh
@@ -25,9 +41,9 @@
   shell: >
     cd /opt/shark/lib_managed/jars/edu.berkeley.cs.shark/hive-exec;
     mv hive-exec-0.11.0-shark-0.9.1.jar hive-exec-0.11.0-shark-0.9.1.jar.orig;
-    swift -A {{ ampcamp['swift_api_url'] }} 
-    -U {{ ampcamp['swift_user'] }} -K {{ ampcamp['swift_key'] }} 
-    download {{ ampcamp['ampcamp_container'] }} hive-exec-0.11.0-shark-0.9.1.jar;
+    swift -A {{ swift_api_url }} 
+    -U {{ swift_user }} -K {{ swift_key }} 
+    download {{ bdas_container }} hive-exec-0.11.0-shark-0.9.1.jar;
     cd /opt/shark/lib_managed/bundles/com.google.protobuf/protobuf-java/;
   tags:
     - install

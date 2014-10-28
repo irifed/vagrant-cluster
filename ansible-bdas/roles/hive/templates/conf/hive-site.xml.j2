@@ -30,7 +30,7 @@
 
   <property>
     <name>fs.defaultFS</name>
-    <value>hdfs://{{ hadoop['hdfs_namenode_host'] }}:{{ hadoop['hdfs_defaultFS_port'] }}/</value>
+    <value>hdfs://{{ hdfs_namenode_host }}:{{ hdfs_defaultFS_port }}/</value>
   </property>
   
   <property>
@@ -49,18 +49,18 @@
   
   <property>
     <name>javax.jdo.option.ConnectionURL</name>
-    <value>jdbc:mysql://{{ mysql['mysql_host'] }}:{{ mysql['mysql_port'] }}/metastore</value>
+    <value>jdbc:mysql://{{ mysql_host }}:{{ mysql_port }}/metastore</value>
     <description>JDBC connect string for a JDBC metastore</description>
   </property>
   
   <property>
     <name>javax.jdo.option.ConnectionUserName</name>
-    <value>{{ hive['hive_metastore_user'] }}</value>
+    <value>{{ hive_metastore_user }}</value>
   </property>
   
   <property>
     <name>javax.jdo.option.ConnectionPassword</name>
-    <value>{{ hive['hive_metastore_password'] }}</value>
+    <value>{{ hive_metastore_password }}</value>
   </property>
   
   <property>
@@ -80,7 +80,7 @@
   
   <property>
     <name>hive.metastore.uris</name>
-    <value>thrift://{{ hive['hive_metastore_host'] }}:{{ hive['hive_metastore_port'] }}</value>
+    <value>thrift://{{ hive_metastore_host }}:{{ hive_metastore_port }}</value>
     <description>IP address (or fully-qualified domain name) and port of the metastore host</description>
   </property>
 
