@@ -18,8 +18,9 @@ Currently, this tool contains Ansible playbooks for provisioning:
 - [OpenMPI](http://www.open-mpi.org/)
 - HDFS based on CDH 5
 - standalone Spark
-- standalone Shark (and Hive)
-- Scala, SBT (TODO include as submodules from Galaxy)
+- Scala, SBT
+- Hive
+- Tachyon
 
 ## Usage
 
@@ -82,8 +83,6 @@ Now, when small cluster was tested on a local machine, it's time to try pushing 
 $ vagrant plugin install vagrant-softlayer
 ```
 
-**Important note**: by default Vagrant will provision instances on SoftLayer sequentially, and this can take a long time. Fortunately, `vagrant-softlayer` plugin allows for parallel provisioning, though not officially at the time of writing this. See [this GitHub discussion](https://github.com/audiolize/vagrant-softlayer/issues/16) for details.
-
 Set up SoftLayer API credentials via environment variables:
 ```
 export SL_SSH_KEY="<< your ssh key label >>"
@@ -143,14 +142,9 @@ Login to master as usual:
 $ vagrant ssh master
 ```
 
-Then become cluster user:
+Start spark-shell:
 ```
-vagrant@master$ sudo su - hadoop
-```
-
-Start Spark:
-```
-hadoop@master$ /opt/spark/sbin/start-all.sh
+root@master:~# /opt/spark/bin/spark-shell --master spark://master:7077
 ```
 
 ## Running Spark on Mesos
@@ -170,11 +164,3 @@ $ vagrant destroy -f
 ## Known issues
 
 Sometimes instance provisioning time on SoftLayer is too long, and Vagrant throws timeout errors. In this case it is advised to switch datacenter and try again or simply retry in same datacenter. For any other problems please create an issue on this GitHub repository.
-
-
-## Credits
-Irina Fedulova (@irifed)
-
-https://github.com/AnsibleShipyard
-
-https://github.com/ansible/ansible-examples
