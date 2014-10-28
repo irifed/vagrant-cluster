@@ -87,7 +87,7 @@
   </header>
 
 
-  <div class="entry-content"><p>In this post we show how to run hands-on excercises from <a href="https://databricks-training.s3.amazonaws.com/index.html">Spark Training</a> tutorial prepared by <a href="http://databricks.com/">Databricks</a>. Note that cluster provisioning and setup using <code>vagrant-cluster</code> tool is described in the <a href="TODO">previous post</a>.</p>
+  <div class="entry-content"><p>In this post we show how to run hands-on excercises from <a href="https://databricks-training.s3.amazonaws.com/index.html">Spark Training</a> tutorial prepared by <a href="http://databricks.com/">Databricks</a>. Note that cluster provisioning and setup using <code>vagrant-cluster</code> tool is described <a href="https://github.com/irifed/vagrant-cluster">here</a>.</p>
 
 <p>Originally Spark Training examples are prepared for running on a local Spark deployment. To run these examples on our cluster on SoftLayer we will have to make some minor modifications, e.g. use different parameters for <code>spark-submit</code>. Here we cover only differences between what was suggested in original Databricks tutorial and what should be done to run examples on the cluster. For detailed example description we strongly encourage you to refer to the original <a href="https://databricks-training.s3.amazonaws.com/index.html">Spark Training</a> tutorial.</p>
 
@@ -320,6 +320,36 @@ by</p>
 <p>Here we simply replaced <code>new File(movieLensHomeDir, "ratings.dat").toString</code> construct by <code>movieLensHomeDir + "ratings.dat"</code>, because <code>new File(...)</code> creates a local File instance from a parent and child path strings, but we do not need this because we provided full HDFS link as a parameter to <code>spark-submit</code>.</p>
 
 <p>Remaining contents of <a href="https://databricks-training.s3.amazonaws.com/movie-recommendation-with-mllib.html">MLlib example</a> does not require any modifications for running on a real cluster.</p>
+
+<h2>Graph Analytics With GraphX</h2>
+
+<p>Start Spark shell as follows:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>/opt/spark/bin/spark-shell --master spark://master:7077</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The only additional step is required for <a href="https://databricks-training.s3.amazonaws.com/graph-analytics-with-graphx.html#load-the-wikipedia-articles">Wikipedia analysis</a> section of this chapter.</p>
+
+<p>Note that Kryo serializer is already enabled by default on your cluster, so you should skip <a href="https://databricks-training.s3.amazonaws.com/graph-analytics-with-graphx.html#constructing-an-end-to-end-graph-analytics-pipeline-on-real-data">steps</a> explaining how to enable it.</p>
+
+<p>Again, original tutorial reads data from local disk, but we should put it to HDFS:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@master:~# cd /spark-training/
+</span><span class='line'>root@master:~# hadoop fs -put data/graphx /data/graphx</span></code></pre></td></tr></table></div></figure>
+
+
+<p>and do not forget to use correct HDFS path (<code>/data/graphx/...</code> instead of <code>data/graphx/...</code>) when loading Wikipedia articles as RDD:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>val articles: RDD[String] = sc.textFile("/data/graphx/graphx-wiki-vertices.txt")
+</span><span class='line'>val links: RDD[String] = sc.textFile("/data/graphx/graphx-wiki-edges.txt")</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As with previous chapters, all remaining content can be run on the cluster without modifications.</p>
 </div>
   
   
