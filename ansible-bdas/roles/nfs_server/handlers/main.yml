@@ -1,6 +1,0 @@
----
-- name: reload exports
-  action: shell exportfs -r
-
-- name: restart nfs-kernel-server
-  service: name=nfs-kernel-server state=restarted
