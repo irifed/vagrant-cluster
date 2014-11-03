@@ -47,11 +47,13 @@ $ brew install ansible
 Finally, clone this repository:
 
 ```
-$ git clone https://github.com/irifed/vagrant-cluster.git
+$ git clone --recursive https://github.com/irifed/vagrant-cluster.git
 ```
 
-This repository contains `ansible-bdas` as submodule, so a couple of additional steps are required:
+This repository contains `ansible-bdas` as submodule, so be sure to add `--recursive` flag to a clone command.
+In case if you forgot, just add a couple of additional steps:
 ```
+$ git clone https://github.com/irifed/vagrant-cluster.git
 $ cd vagrant-cluster
 $ git submodule init
 $ git submodule update
