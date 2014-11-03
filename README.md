@@ -50,6 +50,13 @@ Finally, clone this repository:
 $ git clone https://github.com/irifed/vagrant-cluster.git
 ```
 
+This repository contains `ansible-bdas` as submodule, so a couple of additional steps are required:
+```
+$ cd vagrant-cluster
+$ git submodule init
+$ git submodule update
+```
+
 ### Provision a cluster on a local machine
 
 At this point you are ready to try provisioning a cluster on a local machine:
