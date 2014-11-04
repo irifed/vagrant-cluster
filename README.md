@@ -17,9 +17,8 @@ Currently, this tool contains Ansible playbooks for provisioning:
 - NFS share of /home across cluster nodes
 - [OpenMPI](http://www.open-mpi.org/)
 - HDFS based on CDH 5
-- standalone Spark
-- Scala, SBT
-- Hive
+- Standalone Spark
+- Spark on Mesos
 - Tachyon
 
 ## Usage
@@ -61,7 +60,7 @@ $ git submodule update
 
 ### Provision a cluster on a local machine
 
-At this point you are ready to try provisioning a cluster on a local machine:
+If you would like to test a cluster on a local machine, enter following command:
 
 ```
 $ vagrant up --no-provision && vagrant provision
@@ -69,20 +68,17 @@ $ vagrant up --no-provision && vagrant provision
 
 Two-step provisioning instead of simple `vagrant up` is required to correctly setup a cluster software by Ansible. All nodes must come up and get IP addresses before Ansible starts to configure e.g. `/etc/hosts` parameters.
 
-By default, tool will provision an OpenMPI cluster of 4 nodes (1 frontend and 3 worker nodes). Number of worker nodes can be passed to Vagrant via `NUM_WORKERS` environment variable:
+By default, tool will provision a cluster of 6 nodes (1 frontend and 5 worker nodes). Number of worker nodes can be passed to Vagrant via `NUM_WORKERS` environment variable:
 
 ```
 NUM_WORKERS=2 vagrant up --no-provision && vagrant provision
 ```
 
-After few minutes Vagrant provisioning will complete, hopefully without errors. You can try your cluster in action:
+After few minutes Vagrant provisioning will complete, hopefully without errors. You can login to your cluster as follows:
 
 ```
 $ vagrant ssh master
-vagrant@master $ sudo su - clusteruser
-clusteruser@master $ mpirun -np 4 /bin/hostname
 ```
-Note that after logging into master node it is necessary to switch to `clusteruser` account in order to run programs on cluster.
 
 ### Install cloud provider plugin for Vagrant
 
@@ -92,16 +88,34 @@ Now, when small cluster was tested on a local machine, it's time to try pushing 
 $ vagrant plugin install vagrant-softlayer
 ```
 
-Set up SoftLayer API credentials via environment variables:
-```
-export SL_SSH_KEY="<< your ssh key label >>"
-export SL_API_KEY="<< your SL API key >>"
-export SL_USERNAME="<< your SL API username >>"
-```
 
 ### Provision a cluster on a cloud
 
-Parameters of cluster nodes for SoftLayer should be adjusted in [sl_config.yml](https://github.com/irifed/vagrant-cluster/blob/master/sl_config.yml.template). For running [AMPCamp Big Data Mini Course](http://ampcamp.berkeley.edu/big-data-mini-course/)  example recommended values for `sl_config.yml` are:
+File `sl_config.yml` should contain parameters required for provisioning on the SoftLayer cloud. Edit `sl_config.yml.template` and save it as `sl_config.yml`. You should enter your SoftLayer API credentials, desired domain, select datacenter and instance parameters (number of cpu cores, RAM size):
+```
+# SoftLayer API credentials
+sl_username: "EDIT HERE"
+sl_api_key: "EDIT HERE"
+sl_ssh_key: "EDIT HERE"
+sl_private_key_path: "EDIT HERE"
+
+# custom domain
+sl_domain: "example.com"
+
+# datacenter where virtual servers should be provisioned
+# datacenter = [ams01,dal01,dal05,dal06,hkg02,lon02,sea01,sjc01,sng01,wdc01]
+sl_datacenter: "sjc01"
+
+# virtual server parameters for BDAS cluster
+# cpus = [1,2,4,8,12,16]
+# memory = [1024,2048,4096,6144,8192,12288,16384,32768,49152,65536]
+cpus: 4
+memory: 16384
+disk_capacity: 100
+network_speed: 1000
+```
+
+For running [AMPCamp Big Data Mini Course](http://ampcamp.berkeley.edu/big-data-mini-course/)  example recommended values for `sl_config.yml` are:
 
 ```
 cpus: 4
@@ -114,7 +128,7 @@ Also, for Big Data Mini Course use at least 5 worker nodes: `NUM_WORKERS=5`.
 Due to some limitations of Vagrant (or due to the fact that I could not figure this out yet), we have to explicitly tell Vagrant to use SoftLayer provider during provision step by passing PROVIDER environment variable:
 
 ```
-$ NUM_WORKERS=3 vagrant up --provider=softlayer --no-provision && PROVIDER=softlayer vagrant provision
+$ NUM_WORKERS=5 vagrant up --provider=softlayer --no-provision && PROVIDER=softlayer vagrant provision
 ```
 
 After Vagrant has successfully completed, you can `ssh` to cluster master and run something:
@@ -124,24 +138,6 @@ $ vagrant ssh master
 
 # [optional] verify that /etc/hosts contains ip addresses of cluster nodes
 vagrant@master $ cat /etc/hosts 
-
-# switch to clusteruser account
-vagrant@master $ sudo su - clusteruser
-
-# run simple test
-clusteruser@master $ mpirun -np 4 /bin/hostname
-
-# you should observe list of hostnames of your nodes (not necessarily in order)
-master
-host2
-host1
-host3
-```
-
-Cluster instances will appear in `vagrantcluster.com` domain by default, but you can use `SL_DOMAIN` environment variable to use your custom domain:
-
-```
-export SL_DOMAIN="myawesomedomain.com"
 ```
 
 ## Using Spark
@@ -151,12 +147,12 @@ Login to master as usual:
 $ vagrant ssh master
 ```
 
-Start spark-shell:
+Spark is installed to `/opt/spark` directory. Standalone cluster spark-shell can be run as follows:
 ```
 root@master:~# /opt/spark/bin/spark-shell --master spark://master:7077
 ```
 
-## Running Spark on Mesos
+Spark on Mesos:
 ```
 root@master:~# /opt/spark/bin/spark-shell --master mesos://master:5050
 ```
@@ -173,3 +169,5 @@ $ vagrant destroy -f
 ## Known issues
 
 Sometimes instance provisioning time on SoftLayer is too long, and Vagrant throws timeout errors. In this case it is advised to switch datacenter and try again or simply retry in same datacenter. For any other problems please create an issue on this GitHub repository.
+
+This bug is fixed in `vagrant-softlayer` plugin 0.4, but to use this version you should build gem and install it manually.
