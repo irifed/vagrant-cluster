@@ -11,13 +11,14 @@
 # $ vagrant provision
 
 require 'yaml'
+conf = YAML.load_file("sl_config.yml")
 
 ###############################################################################
 # number of workers in a cluster; total number of VMs will be num_workers + 1 (master)
 #
 # you can specify NUM_WORKERS via cmdline, e.g. 
 # $ NUM_WORKERS=1 vagrant up --provider=softlayer --no-provision
-num_workers = (ENV['NUM_WORKERS'] || 5).to_i 
+num_workers = (conf["num_workers"] || 5).to_i 
 
 # TODO so far could not find way to determine provider during provisioning step,
 # so have to explicitly pass provider via env variable
@@ -38,7 +39,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # config.nfs.functional = false
 
     # SoftLayer provider global settings
-    conf = YAML.load_file("sl_config.yml")
     config.vm.provider "softlayer" do |sl, override|
         
         # provide sl credentials either via yml config or via env vars
@@ -105,6 +105,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             }
             ansible.playbook = "ansible-bdas/site.yml"
             ansible.limit = "all"
+            #ansible.tags = "install"
+            #ansible.tags = "configure"
 
             ansible.verbose = "vvvv"
 
