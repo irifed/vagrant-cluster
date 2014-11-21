@@ -36,7 +36,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     # Uncomment this line if getting NFS error
     # when using from inside other Vagrant VM
-    # config.nfs.functional = false
+    config.nfs.functional = false
 
     # SoftLayer provider global settings
     config.vm.provider "softlayer" do |sl, override|
