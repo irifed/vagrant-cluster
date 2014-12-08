@@ -2,7 +2,7 @@
 <html class="no-js" lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Running Examples From Databricks Spark Tutorial - Data Analytics on SoftLayer</title>
+  <title>Data Analytics on SoftLayer</title>
   <meta name="author" content="Irina Fedulova">
 
   
@@ -14,15 +14,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://irifed.github.io/vagrant-cluster/blog/2014/10/27/running-spark-training-examples">
+  <link rel="canonical" href="http://irifed.github.io/vagrant-cluster/posts/2">
   <link href="/vagrant-cluster/favicon.png" type="image/png" rel="icon">
   <link href="/vagrant-cluster/atom.xml" rel="alternate" title="Data Analytics on SoftLayer" type="application/atom+xml">
 
   <!-- http://opengraphprotocol.org/ -->
   <meta name="twitter:card" content="summary_large_image">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="http://irifed.github.io/vagrant-cluster/blog/2014/10/27/running-spark-training-examples">
-  <meta property="og:title" content="Running Examples From Databricks Spark Tutorial - Data Analytics on SoftLayer">
+  <meta property="og:url" content="http://irifed.github.io/vagrant-cluster/posts/2">
+  <meta property="og:title" content="Data Analytics on SoftLayer">
   
 
   <script src="/vagrant-cluster/javascripts/libs/jquery/jquery-2.0.3.min.js"></script>
@@ -88,12 +88,16 @@
       <div id="main" role="main" class="container">
         <div id="content">
           <div class="row">
-  <div class="page-content col-md-9" itemscope itemtype="http://schema.org/Blog">
+  <div class="page-content col-md-9">
+    <div class="blog-index" itemscope itemtype="http://schema.org/Blog">
     <meta itemprop="name" content="Data Analytics on SoftLayer" />
     
     <meta itemprop="url" content="http://irifed.github.io/vagrant-cluster" />
-    <article class="hentry" role="article" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
       
+      
+      
+        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+          
   <header class="page-header">
     
       <p class="meta text-muted text-uppercase">
@@ -115,15 +119,12 @@
       </p>
     
     
-    <h1 class="entry-title" itemprop="name headline">
-        Running Examples From Databricks Spark Tutorial
-        
-    </h1>
+      <h2 class="entry-title" itemprop="name headline"><a href="/vagrant-cluster/blog/2014/10/27/running-spark-training-examples/" itemprop="url">Running Examples From Databricks Spark Tutorial</a></h2>
     
   </header>
 
 
-<div class="entry-content clearfix" itemprop="articleBody description"><p>In this post we show how to run hands-on excercises from <a href="https://databricks-training.s3.amazonaws.com/index.html">Spark Training</a> tutorial prepared by <a href="http://databricks.com/">Databricks</a> on the data analytics cluster provisioned by Vagrant-Cluster tool. Note that cluster provisioning and setup using this tool is described in detail <a href="https://github.com/irifed/vagrant-cluster">here</a>.</p>
+  <div class="entry-content clearfix" itemprop="articleBody description"><p>In this post we show how to run hands-on excercises from <a href="https://databricks-training.s3.amazonaws.com/index.html">Spark Training</a> tutorial prepared by <a href="http://databricks.com/">Databricks</a> on the data analytics cluster provisioned by Vagrant-Cluster tool. Note that cluster provisioning and setup using this tool is described in detail <a href="https://github.com/irifed/vagrant-cluster">here</a>.</p>
 
 <p>Originally Spark Training examples are prepared for running on a local Spark deployment. To run these examples on our cluster on SoftLayer we will have to make some minor modifications, e.g. use different parameters for <code>spark-submit</code>. Here we cover only differences between what was suggested in original Databricks tutorial and what should be done to run examples on the cluster. For detailed description of examples we strongly encourage you to refer to the original <a href="https://databricks-training.s3.amazonaws.com/index.html">Spark Training</a> tutorial.</p>
 
@@ -387,62 +388,29 @@ by</p>
 
 <p>As with previous chapters, all remaining content can be run on the cluster without modifications.</p>
 </div>
-
-
-      <footer>
-        <p class="meta text-muted">
-          
-  
-
-<span class="glyphicon glyphicon-user"></span> <span class="byline author vcard" itemprop="author" itemscope itemtype="http://schema.org/Person">Posted by <span class="fn" itemprop="name">Irina Fedulova</span></span>
-
-          
-
-
-
-
-
-
-
-
-
-
-
-
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2014-10-27T12:55:04+03:00"  data-updated="true" itemprop="datePublished dateCreated">2014-10-27</time>
-          
-
-
-        </p>
-        
-          <div class="sharing">
-  
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://irifed.github.io/vagrant-cluster/blog/2014/10/27/running-spark-training-examples/" data-via="" data-counturl="http://irifed.github.io/vagrant-cluster/blog/2014/10/27/running-spark-training-examples/" >Tweet</a>
   
   
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
-</div>
 
-        
-        
-          <ul class="meta text-muted pager">
-            
-            
-            <li class="next"><a href="/vagrant-cluster/blog/2014/12/08/softlayer-cluster-manager/" title="Next Post: SoftLayer Cluster Manager">SoftLayer Cluster Manager &raquo;</a></li>
-            
-          </ul>
-        
-      </footer>
-    </article>
-    
+
+        </article>
+      
+    </div>
+
+    <ul class="pager">
+      
+        <li class="previous disabled"><a href="#">&larr;&nbsp;Older</a></li>
+      
+      <li><a href="/vagrant-cluster/blog/archives">Blog Archives</a></li>
+      
+        <li class="next"><a href="/vagrant-cluster/index.html">Newer&nbsp;&rarr;</a></li>
+      
+    </ul>
   </div>
 
   
-  <aside class="sidebar col-md-3">
-    
-      <section class="panel panel-default">
+    <aside class="sidebar col-md-3">
+      
+        <section class="panel panel-default">
   <div class="panel-heading">
     <h3 class="panel-title">Recent Posts</h3>
   </div>
@@ -451,7 +419,7 @@ by</p>
     
     <a class="list-group-item " href="/vagrant-cluster/blog/2014/12/08/softlayer-cluster-manager/">SoftLayer Cluster Manager</a>
     
-    <a class="list-group-item active" href="/vagrant-cluster/blog/2014/10/27/running-spark-training-examples/">Running Examples From Databricks Spark Tutorial</a>
+    <a class="list-group-item " href="/vagrant-cluster/blog/2014/10/27/running-spark-training-examples/">Running Examples From Databricks Spark Tutorial</a>
     
   </div>
 </section>
@@ -461,8 +429,8 @@ by</p>
 
 
 
-    
-  </aside>
+      
+    </aside>
   
 </div>
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Data Analytics on SoftLayer]]></title>
   <link href="http://irifed.github.io/vagrant-cluster/atom.xml" rel="self"/>
   <link href="http://irifed.github.io/vagrant-cluster/"/>
-  <updated>2014-10-28T22:57:46+03:00</updated>
+  <updated>2014-12-08T15:42:21+03:00</updated>
   <id>http://irifed.github.io/vagrant-cluster/</id>
   <author>
     <name><![CDATA[Irina Fedulova]]></name>
@@ -12,6 +12,59 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[SoftLayer Cluster Manager]]></title>
+    <link href="http://irifed.github.io/vagrant-cluster/blog/2014/12/08/softlayer-cluster-manager/"/>
+    <updated>2014-12-08T14:42:10+03:00</updated>
+    <id>http://irifed.github.io/vagrant-cluster/blog/2014/12/08/softlayer-cluster-manager</id>
+    <content type="html"><![CDATA[<p><a href="http://clustermanager.rekesh.com/">SoftLayer Cluster Manager</a> is a simple web service that automates data analytics cluster provisioning on SoftLayer.</p>
+
+<p>SoftLayer Cluster Manager provisions virtual instances on SoftLayer on your behalf using your SoftLayer API key and automatically installs and configures software of your choice. As a result, you are getting a Spark or Hadoop or MPI virtual cluster on SoftLayer in approximately 30 minutes with just one click.
+Since instances are provisioned using your API key, you are being charged for instance use as if you have provisioned them yourself.</p>
+
+<p>All cluster nodes will be password-less accessible from master node and share common file system. Depending on chosen software, this can be either HDFS (for Spark and Hadoop), or NFS, or Tachyon. In addition, <code>python-swiftclient</code> package is installed on master node, so you can access data on SoftLayer Object Storage using <code>swift</code> command and your Object Storage credentials, e.g. to list your container:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>swift -A &lt; swift_api_url &gt; -U &lt; swift_user &gt; -K &lt; swift_key &gt; list &lt; your_container &gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can find <code>swift_api_url</code>, <code>swift_user</code> and <code>swift_key</code> in your container properties in SoftLayer portal.</p>
+
+<p><img class="center" src="http://irifed.github.io/vagrant-cluster/images/clustermanager/login.png"></p>
+
+<p>Dashboard displays the list of all clusters that were provisioned by this service using your SoftLayer API key. In the dashboard you can view each cluster&rsquo;s parameters, cluster provisioning logs and destroy each cluster. There is also a Create button which allows to create a new cluster in your account.</p>
+
+<p><img class="center" src="http://irifed.github.io/vagrant-cluster/images/clustermanager/dashboard.png"></p>
+
+<p>To create a cluster you should select number of cluster nodes (virtual servers), datacenter where you want your nodes to be provisioned in, node parameters, e.g. number of CPU cores, RAM and disk size, network speed. There is also an option to specify your SSH key for password-less login to your cluster, if you have one already provisioned in SoftLayer.</p>
+
+<p>SoftLayer Cluster Manager currently can install following software:</p>
+
+<ul>
+<li>HDFS from CDH 5</li>
+<li>Apache Spark 1.1.0</li>
+<li>Mesos</li>
+<li>Hive</li>
+<li>Cassandra 2.0 (from Datastax repository)</li>
+<li>OpenMPI</li>
+</ul>
+
+
+<p><img class="center" src="http://irifed.github.io/vagrant-cluster/images/clustermanager/create.png"></p>
+
+<p>You can also see each cluster&rsquo;s details by clicking &ldquo;View&rdquo; link on the dashboard.
+Cluster details page displays all information necessary to login to cluster&rsquo;s master node (master node IP address and password) as well as cluster node parameters.</p>
+
+<p><img class="center" src="http://irifed.github.io/vagrant-cluster/images/clustermanager/details.png"></p>
+
+<p>&ldquo;Logs&rdquo; link displays cluster provisioning logs where you can dynamically watch cluster provisioning and software orchestration process.</p>
+
+<p><img class="center" src="http://irifed.github.io/vagrant-cluster/images/clustermanager/logs.png"></p>
+
+<p>Finally, clicking &ldquo;Delete&rdquo; link will permanently destroy all nodes in your cluster.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Running Examples From Databricks Spark Tutorial]]></title>
