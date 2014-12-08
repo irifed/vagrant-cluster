@@ -113,6 +113,8 @@ cpus: 4
 memory: 16384
 disk_capacity: 100
 network_speed: 1000
+
+num_workers: 5
 ```
 
 For running [AMPCamp Big Data Mini Course](http://ampcamp.berkeley.edu/big-data-mini-course/)  example recommended values for `sl_config.yml` are:
@@ -123,12 +125,12 @@ memory: 16384
 disk_capacity: 100
 network_speed: 1000
 ```
-Also, for Big Data Mini Course use at least 5 worker nodes: `NUM_WORKERS=5`.
+Also, for Big Data Mini Course use at least 5 worker nodes: `num_workers=5`.
 
 Due to some limitations of Vagrant (or due to the fact that I could not figure this out yet), we have to explicitly tell Vagrant to use SoftLayer provider during provision step by passing PROVIDER environment variable:
 
 ```
-$ NUM_WORKERS=5 vagrant up --provider=softlayer --no-provision && PROVIDER=softlayer vagrant provision
+$ vagrant up --provider=softlayer --no-provision && PROVIDER=softlayer vagrant provision
 ```
 
 After Vagrant has successfully completed, you can `ssh` to cluster master and run something:
