@@ -108,7 +108,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             #ansible.tags = "install"
             #ansible.tags = "configure"
 
-            ansible.verbose = "vvvv"
+            # Use 'vvv', 'vvvv' for greater detail
+            # ansible.verbose = "vvvv"
+            ansible.verbose = ""
 
             case provider 
             when "softlayer" then
