@@ -4,7 +4,7 @@
   <title><![CDATA[Data Analytics on SoftLayer]]></title>
   <link href="http://irifed.github.io/vagrant-cluster/atom.xml" rel="self"/>
   <link href="http://irifed.github.io/vagrant-cluster/"/>
-  <updated>2014-12-08T15:42:21+03:00</updated>
+  <updated>2014-12-24T13:49:18+03:00</updated>
   <id>http://irifed.github.io/vagrant-cluster/</id>
   <author>
     <name><![CDATA[Irina Fedulova]]></name>
@@ -18,22 +18,46 @@
     <link href="http://irifed.github.io/vagrant-cluster/blog/2014/12/08/softlayer-cluster-manager/"/>
     <updated>2014-12-08T14:42:10+03:00</updated>
     <id>http://irifed.github.io/vagrant-cluster/blog/2014/12/08/softlayer-cluster-manager</id>
-    <content type="html"><![CDATA[<p><a href="http://clustermanager.rekesh.com/">SoftLayer Cluster Manager</a> is a simple web service that automates data analytics cluster provisioning on SoftLayer.</p>
+    <content type="html"><![CDATA[<p><em>This article introduces SoftLayer Cluster Manager - a web interface for provisioning a cluster of virtual servers on SoftLayer and automatic deployment of data analytics software on it. For example, users can get an <a href="http://spark.apache.org/">Apache Spark</a> cluster on SoftLayer with just one click.</em></p>
 
-<p>SoftLayer Cluster Manager provisions virtual instances on SoftLayer on your behalf using your SoftLayer API key and automatically installs and configures software of your choice. As a result, you are getting a Spark or Hadoop or MPI virtual cluster on SoftLayer in approximately 30 minutes with just one click.
-Since instances are provisioned using your API key, you are being charged for instance use as if you have provisioned them yourself.</p>
+<h2>Introduction</h2>
 
-<p>All cluster nodes will be password-less accessible from master node and share common file system. Depending on chosen software, this can be either HDFS (for Spark and Hadoop), or NFS, or Tachyon. In addition, <code>python-swiftclient</code> package is installed on master node, so you can access data on SoftLayer Object Storage using <code>swift</code> command and your Object Storage credentials, e.g. to list your container:</p>
+<p>In the era of Big Data the need for running analytics workloads has become ubiquitous. These workloads are often dynamic: they emerge, grow and scale down depending on the business need and available data. The best place to perform scalable computations is cloud environment with its on-demand delivery. Typical use case on a cloud looks as follows: provision a bunch of instances, install and configure analytics software stack, provide a dataset link or upload it directly to the cluster, analyze data and tear down a whole cluster. Cloud resources are being charged on a pay-per-use basis, so users are interested in minimizing not productive cluster usage time. Cluster deployment should be as easy and fast as possible, so users can focus on performing data analysis and solving their business problems.</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>swift -A &lt; swift_api_url &gt; -U &lt; swift_user &gt; -K &lt; swift_key &gt; list &lt; your_container &gt;</span></code></pre></td></tr></table></div></figure>
+<p>At the same time, the landscape of data analytics software has substantially increased during recent years. In addition to traditional MapReduce computational framework we now can use new fast data processing tools like <a href="http://spark.apache.org/">Apache Spark</a>, in-memory file systems like <a href="http://tachyon-project.org">Tachyon</a> and ensure that cluster resources are fully utilized by using management systems like <a href="http://mesos.apache.org/">Apache Mesos</a>. Many of popular data analytics components are being developed by the UC Berkeley&rsquo;s <a href="https://amplab.cs.berkeley.edu">AMPLab</a>. Complete deployment and setup of the full <a href="https://amplab.cs.berkeley.edu/software/">Berkeley Data Analytics Stack</a> (BDAS) is a time consuming and error-prone task when performed manually. Even though there are a lot of powerful cluster management tools available on the market, most of them are commercial, complex to use and at least require some controller server to be provisioned in advance. On the other hand, some of the data analytics software, e.g. Apache Spark, do provide simple command-line scripts for provisioning a cluster on Amazon cloud environment. However, installing installing multiple tools would require managing multiple scripts and performing manual configuration.
+In addition,  unfortunately these tools are only available for Amazon cloud, but not for other cloud environments because of the API differences.</p>
+
+<p>In this tutorial we present two tools for automated data analytics cluster provisioning on the SoftLayer cloud environment.</p>
+
+<ul>
+<li><a href="http://clustermanager.rekesh.com/">SoftLayer Cluster Manager</a> is a simple web interface for provisioning a data analytics cluster on SoftLayer with few mouse clicks. Its target audience are data science engineers who need a way to quickly bring up a cluster for ad-hoc data analysis. Under the hood SoftLayer Cluster Manager is based on the <code>vagrant-cluster</code> tool mentioned below.</li>
+<li><a href="https://github.com/irifed/vagrant-cluster"><code>vagrant-cluster</code></a> is a command-line tool for achieving same goal - provisioning a data analytics cluster on SoftLayer. <code>vagrant-cluster</code> is based on <a href="https://www.vagrantup.com/">Vagrant</a> and <a href="http://www.ansible.com">Ansible</a>. Its target audience are DevOps engineers who can integrate this command-line tool in their usual frameworks.</li>
+</ul>
 
 
-<p>You can find <code>swift_api_url</code>, <code>swift_user</code> and <code>swift_key</code> in your container properties in SoftLayer portal.</p>
+<h2>SoftLayer Cluster Manager</h2>
+
+<p>SoftLayer Cluster Manager provisions virtual instances on SoftLayer on your behalf using your SoftLayer API key and automatically installs and configures software of your choice. As a result, you are getting a Spark or Hadoop or MPI virtual cluster on SoftLayer in approximately 30 minutes with just few clicks.
+Since instances are provisioned using your API key, you can see these instances in your SoftLayer portal. You will be charged for instance use as if you have provisioned them yourself.</p>
+
+<p>It is important to note that SoftLayer Cluster Manager is not a fully managed service, like for example Amazon&rsquo;s Elastic MapReduce. SoftLayer Cluster Manager can provision a cluster of virtual servers on SoftLayer and deploy software stack on it, and also destroy the cluster when it is no longer necessary. You can get a fully configured cluster, but at this moment SoftLayer cluster manager does not provide advanced features like automatic reprovisioning of the failed nodes and scaling cluster up and down.</p>
+
+<h3>Creating and setting up your SoftLayer account</h3>
+
+<p>Obviously, to use SoftLayer Cluster Manager you should have a SoftLayer account. If you do not have it already, please refer to this series of <a href="http://thoughtsoncloud.com/2014/06/creating-first-virtual-server-softlayer-billing-options/">blog posts</a> describing the process of creating an account on SoftLayer. In short, as distinguished from other cloud providers, there is no &ldquo;Create an account&rdquo; button on SoftLayer. To create an account, you are required to order at least one virtual server and enter your credit card data first. Your account will be created automatically when your order is placed. You should receive account data via email you&rsquo;ve specified during in the server order page.</p>
+
+<p>To login to the SoftLayer Cluster Manager you should enter SoftLayer username and API key. In order to keep things secure it is recommended to create a separate user within your account for provisioning clusters with SoftLayer Cluster Manager. SoftLayer allows to create multiple users within one master account and fine tune security privileges for each users. <a href="http://thoughtsoncloud.com/2014/07/softlayer-account-now/">This blog post</a> describes creating additional users in the SoftLayer account in detail.</p>
+
+<h3>Using SoftLayer Cluster Manager</h3>
+
+<p>Once you have created a separate user for working with SoftLayer Cluster Manager, create an API key for this user. Steps for getting and API key are described in detailed at <a href="http://knowledgelayer.softlayer.com/procedure/retrieve-your-api-key">SoftLayer knowledge base</a>.</p>
+
+<p>You can now login to the SoftLayer Cluster Manager service using your username and API key at <a href="http://clustermanager.rekesh.com.">http://clustermanager.rekesh.com.</a></p>
 
 <p><img class="center" src="http://irifed.github.io/vagrant-cluster/images/clustermanager/login.png"></p>
 
-<p>Dashboard displays the list of all clusters that were provisioned by this service using your SoftLayer API key. In the dashboard you can view each cluster&rsquo;s parameters, cluster provisioning logs and destroy each cluster. There is also a Create button which allows to create a new cluster in your account.</p>
+<p>After getting through the login page you will be presented a dashboard.
+Dashboard displays the list of all clusters that were provisioned by this service using your SoftLayer API key. In the dashboard you can view each cluster&rsquo;s parameters, cluster provisioning logs and destroy each cluster. There is also a Create button which allows to create a new cluster in your account.</p>
 
 <p><img class="center" src="http://irifed.github.io/vagrant-cluster/images/clustermanager/dashboard.png"></p>
 
@@ -63,6 +87,20 @@ Cluster details page displays all information necessary to login to cluster&rsqu
 <p><img class="center" src="http://irifed.github.io/vagrant-cluster/images/clustermanager/logs.png"></p>
 
 <p>Finally, clicking &ldquo;Delete&rdquo; link will permanently destroy all nodes in your cluster.</p>
+
+<p>All cluster nodes will be password-less accessible from master node and share common file system. Depending on chosen software, this can be either HDFS (for Spark and Hadoop), or NFS (for OpenMPI), or Tachyon. In addition, <code>python-swiftclient</code> package is installed on master node, so you can access data on SoftLayer Object Storage using <code>swift</code> command and your Object Storage credentials, e.g. to download all files with prefix <code>pre</code> from your container:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>swift -A &lt; swift_api_url &gt; -U &lt; swift_user &gt; -K &lt; swift_key &gt; download &lt; your_container &gt; --prefix &lt; pre &gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can find <code>swift_api_url</code>, <code>swift_user</code> and <code>swift_key</code> in your container properties in SoftLayer portal.</p>
+
+<h2>Vagrant-Cluster</h2>
+
+<p>SoftLayer Cluster Manager is based on open-source <code>vagrant-cluster</code> tool under the hood. <code>vagrant-cluster</code> is using <a href="https://www.vagrantup.com/">Vagrant</a> with <a href="https://github.com/audiolize/vagrant-softlayer"><code>vagrant-softlayer</code></a> plugin for managing virtual instances on SoftLayer and <a href="http://www.ansible.com">Ansible</a> for installing and configuring data analytics software stack on the cluster.</p>
+
+<p><code>vagrant-cluster</code> is available on Github repository: <a href="https://github.com/irifed/vagrant-cluster.">https://github.com/irifed/vagrant-cluster.</a> Detailed usage instructions are provided in the <code>README.md</code> of this repository.</p>
 ]]></content>
   </entry>
   
