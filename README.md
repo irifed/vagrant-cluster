@@ -43,6 +43,16 @@ $ brew update
 $ brew install ansible
 ```
 
+If you are using Linux, the steps are similar.  However, you need to ensure that you are using the latest versions of Ansible and Vagrant, e.g. on Ubuntu:
+```
+wget https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.2_x86_64.deb
+dpkg -i vagrant_1.7.2_x86_64.deb
+wget http://releases.ansible.com/ansible/ansible-latest.tar.gz
+tar -zxvf ansible-latest.tar.gz
+cd ansible-1.8.4
+python setup.py build
+python setup.py install
+```
 Finally, clone this repository:
 
 ```
@@ -60,7 +70,7 @@ $ git submodule update
 
 ### Provision a cluster on a local machine
 
-If you would like to test a cluster on a local machine, enter following command:
+If you would like to test a cluster on a local machine, enter following command (make sure that you have VirtualBox installed first):
 
 ```
 $ vagrant up --no-provision && vagrant provision
@@ -127,10 +137,15 @@ network_speed: 1000
 ```
 Also, for Big Data Mini Course use at least 5 worker nodes: `num_workers=5`.
 
-Due to some limitations of Vagrant (or due to the fact that I could not figure this out yet), we have to explicitly tell Vagrant to use SoftLayer provider during provision step by passing PROVIDER environment variable:
+Due to some limitations of Vagrant on a Mac (or due to the fact that I could not figure this out yet), we have to explicitly tell Vagrant to use SoftLayer provider during provision step by passing PROVIDER environment variable:
 
 ```
 $ vagrant up --provider=softlayer --no-provision && PROVIDER=softlayer vagrant provision
+```
+If you are using Linux, you can simply
+
+```
+$ vagrant up --provider=softlayer
 ```
 
 After Vagrant has successfully completed, you can `ssh` to cluster master and run something:
