@@ -44,7 +44,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         # provide sl credentials either via yml config or via env vars
         sl.username = conf["sl_username"] || ENV['SL_USERNAME']
         sl.api_key = conf["sl_api_key"] || ENV['SL_API_KEY']
-        sl.ssh_keys = conf["sl_ssh_keys"]
+        sl.ssh_keys = conf["sl_ssh_key"]
 
         sl.domain = conf["sl_domain"] || ENV['SL_DOMAIN'] || "vagrantcluster.com"
 
