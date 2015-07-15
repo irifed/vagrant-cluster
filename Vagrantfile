@@ -76,6 +76,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provider "virtualbox" do |vb, override|
         override.vm.box = "ubuntu/trusty64"
         override.vm.network "private_network", type: "dhcp"
+        config.ssh.insert_key = false
 
         # on local machine use smallest parameters for VMs
         vb.customize ["modifyvm", :id, "--cpus", "1", "--memory", "512"]
